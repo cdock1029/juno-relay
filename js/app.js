@@ -1,15 +1,43 @@
-import 'babel-polyfill';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import App from './components/App';
-import AppHomeRoute from './routes/AppHomeRoute';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Relay from 'react-relay';
+// import { browserHistory } from 'react-router'
+// import routes from './routes'
+const rootEl = document.getElementById('root')
 
-ReactDOM.render(
-  <Relay.RootContainer
-    Component={App}
-    route={new AppHomeRoute()}
-  />,
-  document.getElementById('root')
-);
+const render = () => {
+  const Root = require('./root').default
+  ReactDOM.render(
+    <div>
+      <Root />
+    </div>,
+    rootEl
+  )
+}
+
+let finalRender = render
+if (module.hot) {
+  const renderApp = () => {
+    ReactDOM.unmountComponentAtNode(rootEl)
+    render()
+  }
+  const renderError = (error) => {
+    const RedBox = require('redbox-react')
+    ReactDOM.render(
+      <RedBox error={error} />,
+      rootEl
+    )
+  }
+  finalRender = () => {
+    try {
+      renderApp()
+    } catch (error) {
+      renderError(error)
+    }
+  }
+  module.hot.accept('./root', () => {
+    setTimeout(render)
+  })
+}
+
+finalRender()

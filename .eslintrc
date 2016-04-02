@@ -1,0 +1,24 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "semi": [2, "never"],
+    "no-unused-vars": [2, { "argsIgnorePattern": "^_" }],
+    "react/prefer-es6-class": [2, "never"],
+    "react/jsx-closing-bracket-location": [1, "after-props"],
+    "jsx-quotes": [2, "prefer-single"],
+    "max-len": [2, 100, 2, {
+      "ignoreUrls": true,
+      "ignoreComments": false,
+      "ignorePattern": "\\/"
+    }],
+    "no-use-before-define": [1]
+  }
+}

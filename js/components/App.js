@@ -1,34 +1,39 @@
-import React from 'react';
-import Relay from 'react-relay';
+import React, { PropTypes } from 'react'
+import cx from 'classnames'
 
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>Widget list</h1>
-        <ul>
-          {this.props.viewer.widgets.edges.map(edge =>
-            <li key={edge.node.id}>{edge.node.name} (ID: {edge.node.id})</li>
-          )}
-        </ul>
+import {
+  PropertyListContainer,
+  BuildingListContainer,
+  UnitListContainer,
+  Header,
+} from './index'
+
+const App = ({ buildingComponent, unitComponent, company }) => (
+  <div className='ui four column grid'>
+      <Header text='Property Manager Yess?' />
+      <div className='row'>
+        <div className='column'>
+          <h2 className='ui green header'>{company.name}</h2>
+        </div>
       </div>
-    );
-  }
+      <div
+        className={cx('ui', 'row segment')}
+        style={{ minHeight: '14rem', maxHeight: '25rem' }}>
+        <PropertyListContainer company={company} />
+        {<buildingComponent company={company} /> || <noscript />}
+        {<unitComponent company={company} /> || <noscript />}
+      </div>
+  </div>
+)
+
+App.propTypes = {
+  company: PropTypes.object.isRequired,
+  buildingComponent: PropTypes.object.isRequired,
+  unitComponent: PropTypes.object.isRequired,
 }
 
-export default Relay.createContainer(App, {
-  fragments: {
-    viewer: () => Relay.QL`
-      fragment on User {
-        widgets(first: 10) {
-          edges {
-            node {
-              id,
-              name,
-            },
-          },
-        },
-      }
-    `,
-  },
-});
+/* const COMPONENTS = [
+  [BuildingListContainer, 'showBuildingListContainer'],
+] */
+
+export default App

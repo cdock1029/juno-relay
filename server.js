@@ -1,46 +1,52 @@
-import express from 'express';
-import graphQLHTTP from 'express-graphql';
-import path from 'path';
-import webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
-import {Schema} from './data/schema';
+const express = require('express')
+const graphQLHTTP = require('express-graphql')
+const path = require('path')
+const Schema = require('./data/schema').Schema
+const proxyMiddleware = require('proxy-middleware')
+const url = require('url')
 
-const APP_PORT = 3000;
-const GRAPHQL_PORT = 8080;
+const webpack = require('webpack')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
+const webpackConfig = require('./webpack.config')
+
+const compiler = webpack(webpackConfig)
+const APP_PORT = 3000
+const GRAPHQL_PORT = 8080
 
 // Expose a GraphQL endpoint
-var graphQLServer = express();
+const graphQLServer = express()
 graphQLServer.use('/', graphQLHTTP({
   graphiql: true,
   pretty: true,
   schema: Schema,
-}));
-graphQLServer.listen(GRAPHQL_PORT, () => console.log(
-  `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`
-));
+}))
+graphQLServer.listen(GRAPHQL_PORT, () => {
+  console.log('\n\n\n👁👁👁👁👁👁👁👁👁👁👁\n\n')
+  console.log(`GraphQL Server is now running on http://0.0.0.0:${GRAPHQL_PORT}`)
+})
 
-// Serve the Relay app
-var compiler = webpack({
-  entry: path.resolve(__dirname, 'js', 'app.js'),
-  module: {
-    loaders: [
-      {
-        exclude: /node_modules/,
-        loader: 'babel',
-        test: /\.js$/,
-      }
-    ]
+const app = express()
+app.use(require('morgan')('short'))
+app.use('/graphql', proxyMiddleware(url.parse(`http://0.0.0.0:${GRAPHQL_PORT}`)))
+
+app.use(webpackDevMiddleware(compiler, {
+  noInfo: true,
+  stats: {
+    colors: true,
   },
-  output: {filename: 'app.js', path: '/'}
-});
-var app = new WebpackDevServer(compiler, {
-  contentBase: '/public/',
-  proxy: {'/graphql': `http://localhost:${GRAPHQL_PORT}`},
-  publicPath: '/js/',
-  stats: {colors: true}
-});
+  publicPath: webpackConfig.output.publicPath,
+}))
+app.use(webpackHotMiddleware(compiler))
+
+// custom routes...
 // Serve static resources
-app.use('/', express.static(path.resolve(__dirname, 'public')));
+// app.use(express.static('public'))
+app.get('/', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'index.html'))
+})
+
 app.listen(APP_PORT, () => {
-  console.log(`App is now running on http://localhost:${APP_PORT}`);
-});
+  console.log(`App server running on http://0.0.0.0:${APP_PORT}`)
+  console.log('\n\n\n👁👁👁👁👁👁👁👁👁👁👁\n\n')
+})
