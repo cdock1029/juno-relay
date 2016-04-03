@@ -7,3 +7,5 @@ html, body {
 body {
   padding-top: 5em;
 }
+
+.ui.segment.segments { padding: 3.5em 1em 1.5em 1em; }

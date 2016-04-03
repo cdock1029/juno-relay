@@ -6,7 +6,7 @@ import PropertyListContainer from './PropertyListContainer'
 import UnitListContainer from './UnitListContainer'
 import NotFound from './NotFound'
 import Root from './NotFound'
-import Header from './Header'
+import Heading from './Heading'
 
 export {
   App,
@@ -17,5 +17,5 @@ export {
   EntityListItem,
   NotFound,
   Root,
-  Header,
+  Heading,
 }

@@ -8,9 +8,7 @@ const rootEl = document.getElementById('root')
 const render = () => {
   const Root = require('./root').default
   ReactDOM.render(
-    <div>
-      <Root />
-    </div>,
+    <Root />,
     rootEl
   )
 }

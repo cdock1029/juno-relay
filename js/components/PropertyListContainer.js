@@ -17,7 +17,7 @@ const PropertyListContainer = React.createClass({
     } = this.props
     return (
       <EntityList
-        title={'Property Yo'}
+        title={'Property'}
         size='eight wide mobile four wide tablet three wide computer'>
         {edges.map(({ property }) => (
             <EntityListItem

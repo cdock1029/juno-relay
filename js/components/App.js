@@ -3,9 +3,6 @@ import cx from 'classnames'
 
 import {
   PropertyListContainer,
-  BuildingListContainer,
-  UnitListContainer,
-  Header,
 } from './index'
 
 const App = (props) => {
@@ -13,17 +10,11 @@ const App = (props) => {
   console.log('render App - props:', props)
   return (
     <div className='ui four column grid'>
-      <Header text='Property Manager' />
-      <div className='row'>
-        <div className='column'>
-          <h2 className='ui green header'>{company.name}</h2>
-        </div>
-      </div>
-      <div
-        className={cx('ui', 'row segment')}>
+      <div className={cx('segments', 'ui', 'row attached segment')}>
         <PropertyListContainer company={company} />
         {buildingComponent || <noscript />}
         {unitComponent || <noscript />}
+        <div className='ui top attached violet label'>{company.name}</div>
       </div>
     </div>
   )
