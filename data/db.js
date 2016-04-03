@@ -10,12 +10,12 @@ const conn = new Seq(
 )
 
 const Company = conn.define('company', {
-  type: { type: Seq.STRING, allowNull: false },
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'Company' },
   name: { type: Seq.STRING, allowNull: false },
 })
 
 const Property = conn.define('property', {
-  type: { type: Seq.STRING, allowNull: false },
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'Property' },
   name: { type: Seq.STRING, allowNull: false },
   city: { type: Seq.STRING, allowNull: false },
   street: { type: Seq.STRING, allowNull: false },
@@ -24,13 +24,51 @@ const Property = conn.define('property', {
 })
 
 const Building = conn.define('building', {
-  type: { type: Seq.STRING, allowNull: false },
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'Building' },
   address: { type: Seq.STRING, allowNull: false },
 })
 
 const Unit = conn.define('unit', {
-  type: { type: Seq.STRING, allowNull: false },
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'Unit' },
   number: { type: Seq.INTEGER, allowNull: false },
+})
+
+const Lease = conn.define('unit', {
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'Lease' },
+  rent: { type: Seq.INTEGER, allowNull: false },
+  startDate: { type: Seq.DATE, allowNull: false, defaultValue: Seq.NOW },
+  endDate: { type: Seq.DATE, allowNull: true },
+  nextRentDate: { type: Seq.DATE, allowNull: false, defaultValue: Seq.NOW },
+})
+
+const Tenant = conn.define('tenant', {
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'Tenant' },
+  firstName: {
+    type: Seq.STRING, allowNull: false, unique: 'tenantNameComposite',
+  },
+  middleName: {
+    type: Seq.STRING, allowNull: true, unique: 'tenantNameComposite',
+  },
+  lastName: {
+    type: Seq.STRING, allowNull: false, unique: 'tenantNameComposite',
+  },
+  phone: { type: Seq.STRING, allowNull: false },
+}, {
+  getterMethods: {
+    fullName: function _getFullName() {
+      const first = this.getDataValue('firstName')
+      const mid = this.getDataValue('middleName')
+      const last = this.getDataValue('lastName')
+
+      let full
+      if (mid) {
+        full = `${first} ${mid} ${last}`
+      } else {
+        full = `${first} ${last}`
+      }
+      return full
+    },
+  },
 })
 
 Company.hasMany(Property)
