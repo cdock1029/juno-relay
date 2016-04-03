@@ -8,28 +8,31 @@ import {
   Header,
 } from './index'
 
-const App = ({ buildingComponent, unitComponent, company }) => (
-  <div className='ui four column grid'>
-      <Header text='Property Manager Yess?' />
+const App = (props) => {
+  const { buildingComponent, unitComponent, company } = props
+  console.log('render App - props:', props)
+  return (
+    <div className='ui four column grid'>
+      <Header text='Property Manager' />
       <div className='row'>
         <div className='column'>
           <h2 className='ui green header'>{company.name}</h2>
         </div>
       </div>
       <div
-        className={cx('ui', 'row segment')}
-        style={{ minHeight: '14rem', maxHeight: '25rem' }}>
+        className={cx('ui', 'row segment')}>
         <PropertyListContainer company={company} />
-        {<buildingComponent company={company} /> || <noscript />}
-        {<unitComponent company={company} /> || <noscript />}
+        {buildingComponent || <noscript />}
+        {unitComponent || <noscript />}
       </div>
-  </div>
-)
+    </div>
+  )
+}
 
 App.propTypes = {
   company: PropTypes.object.isRequired,
-  buildingComponent: PropTypes.object.isRequired,
-  unitComponent: PropTypes.object.isRequired,
+  buildingComponent: PropTypes.object,
+  unitComponent: PropTypes.object,
 }
 
 /* const COMPONENTS = [

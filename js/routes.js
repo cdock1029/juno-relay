@@ -14,20 +14,14 @@ import {
 } from './containers'
 
 const PropertyQueries = {
-  company: (Component) => Relay.QL`
-    query PropertiesQueries {
-      company {
-        ${Component.getFragment('company')}
-      }
-    }
+  company: () => Relay.QL`
+    query PropertiesQueries { company }
   `,
 }
 const BuildingQueries = {
-  property: (Component) => Relay.QL`
+  property: () => Relay.QL`
     query BuildingQueries {
-      node(id: $propertyId) {
-        ${Component.getFragment('property')}
-      }
+      node(id: $propertyId)
     }
   `,
 }
@@ -50,7 +44,7 @@ const routes = [
       path=':propertyId/buildings'
       components={{ buildingComponent: BuildingListContainer }}
       queries={{ buildingComponent: BuildingQueries }} />
-    <Route path=':propertyId/buildings/:buildingId'
+    <Route path=':propertyId/buildings/:buildingId/units'
       components={{
         buildingComponent: BuildingListContainer,
         unitComponent: UnitListContainer,

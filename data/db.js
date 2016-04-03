@@ -45,7 +45,7 @@ Unit.belongsTo(Building)
     type: 'Company',
     name: 'Vandelay Industries',
   }).then(company => {
-    times(4,
+    times(6,
       () => company.createProperty({
         type: 'Property',
         name: faker.company.companyName(),
@@ -54,12 +54,12 @@ Unit.belongsTo(Building)
         street: faker.address.streetName(),
         zip: faker.address.zipCode(),
       }).then(property => {
-        times(2,
+        times(4,
           () => property.createBuilding({
             type: 'Building',
             address: faker.random.number({ min: 2000, max: 3500 }).toString(),
           }).then(building => {
-            times(10,
+            times(15,
               () => building.createUnit({
                 type: 'Unit',
                 number: faker.random.number({ min: 100, max: 200 }),

@@ -6,21 +6,25 @@ const PropertyListContainer = React.createClass({
 
   propTypes: {
     company: React.PropTypes.object.isRequired,
+    relay: React.PropTypes.object.isRequired,
   },
 
   render() {
     console.log('PropertyListContainer - props', this.props)
-    const { company: { properties: { edges } } } = this.props
+    const {
+      company: { properties: { edges } },
+      relay: { route: { params: { propertyId } } },
+    } = this.props
     return (
       <EntityList
         title={'Property Yo'}
         size='eight wide mobile four wide tablet three wide computer'>
-        {edges.map(edge => (
+        {edges.map(({ property }) => (
             <EntityListItem
-              key={edge.property.id}
-              active={false}
-              path={`/${edge.property.id}/buildings`}
-              text={edge.property.name} />
+              key={property.id}
+              active={property.id === propertyId}
+              path={`/${property.id}/buildings`}
+              text={property.name} />
           ))}
       </EntityList>
     )

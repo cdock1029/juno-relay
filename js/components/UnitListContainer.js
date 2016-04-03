@@ -10,7 +10,7 @@ const UnitListContainer = React.createClass({
 
   render() {
     console.log('UnitListContainer - props', this.props)
-    const { building: { units: edges } } = this.props
+    const { building: { units: { edges } } } = this.props
     return (
       <EntityList
         title={'Unit'}
@@ -29,8 +29,10 @@ const UnitListContainer = React.createClass({
                 `/${'fill_me_in'}/buildings/${'me_too'}/units/${e.unit.id}`
               }
               text={
-                `${e.unit.number}\u00a0\u00a0\u00a0\u00a0${tenants ?
-                  tenants.map(t => `${t.firstName} ${t.lastName}`) : ''}`
+                `${e.unit.number}\u00a0\u00a0\u00a0\u00a0`
+                /* ${tenants ?
+                  tenants.map(t => `${t.firstName} ${t.lastName}`) :
+                  ''}`*/
               } />
             )
         })}
@@ -46,7 +48,7 @@ export default Relay.createContainer(UnitListContainer, {
       fragment on Building {
         units(first: 50) {
           edges {
-            node {
+            unit:node {
               id
               number
             }

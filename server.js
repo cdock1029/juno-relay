@@ -41,8 +41,8 @@ app.use(webpackHotMiddleware(compiler))
 
 // custom routes...
 // Serve static resources
-// app.use(express.static('public'))
-app.get('/', (req, res) => {
+app.use('/assets', express.static('public'))
+app.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'))
 })
 

@@ -4,7 +4,7 @@ import cx from 'classnames'
 
 const EntityListItem = ({ active, path, text }) => (
   <Link
-    className={cx({ item: true, active })}
+    className={cx('item', { active })}
     to={path}>
     {text}
   </Link>

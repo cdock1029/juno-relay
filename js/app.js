@@ -18,7 +18,7 @@ const render = () => {
 let finalRender = render
 if (module.hot) {
   const renderApp = () => {
-    ReactDOM.unmountComponentAtNode(rootEl)
+    // ReactDOM.unmountComponentAtNode(rootEl)
     render()
   }
   const renderError = (error) => {
