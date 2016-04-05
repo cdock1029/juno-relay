@@ -7,6 +7,7 @@ const BuildingListContainer = React.createClass({
   propTypes: {
     property: PropTypes.object.isRequired,
     params: PropTypes.object.isRequired,
+    relay: PropTypes.object.isRequired,
   },
 
   render() {
@@ -18,19 +19,20 @@ const BuildingListContainer = React.createClass({
         },
       },
       params: { propertyId },
+      relay: { route: { params: { buildingId } } },
     } = this.props
     // TODO: should we short cricuit & not render when buildingListId
     // not defined ? (leaf nodes rendered before data fetched)
     return (
       <EntityList
         title={'Building'}
-        size='eight wide mobile four wide tablet three wide computer'>
-        {edges.map(e => (
+        size='eight wide mobile four wide tablet two wide computer'>
+        {edges.map(({ building }) => (
             <EntityListItem
-              key={e.building.id}
-              active={false}
-              path={`/${propertyId}/buildings/${e.building.id}/units`}
-              text={e.building.address} />
+              key={building.id}
+              active={building.id === buildingId}
+              path={`/${propertyId}/buildings/${building.id}/units`}
+              text={building.address} />
         ))}
       </EntityList>
     )

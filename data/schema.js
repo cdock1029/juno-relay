@@ -45,6 +45,10 @@ const { nodeInterface, nodeField } = nodeDefinitions(
         return Property
       case 'Company':
         return Company
+      case 'Lease':
+        return Lease
+      case 'Tenant':
+        return Tenant
       default:
         debug(`Unknown object type: ${obj.type}`)
         return null
@@ -140,14 +144,67 @@ const Unit = new GraphQLObjectType({
   description: 'Individual Apartments / Units within a building',
   fields: () => ({
     id: globalIdField('Unit'),
-    number: {
-      type: GraphQLInt,
-      resolve: unit => unit.number,
-    },
+    number: { type: GraphQLInt, resolve: unit => unit.number },
     building: {
       description: 'The building to which this unit belongs',
       type: Building,
       resolve: unit => unit.getBuilding(),
+    },
+    leases: {
+      type: LeaseConnection,
+      args: connectionArgs,
+      description: 'Leases associated with this unit',
+      resolve: (unit, args) => connectionFromPromisedArray(
+        unit.getLeases({ order: [['startDate', 'DESC']] }),
+        args
+      ),
+    },
+  }),
+  interfaces: [nodeInterface],
+})
+
+const Lease = new GraphQLObjectType({
+  name: 'Lease',
+  description: 'Lease of Tenant(s) for particular Unit',
+  fields: () => ({
+    id: globalIdField('Lease'),
+    rent: { type: GraphQLInt, resolve: lease => lease.rent },
+    startDate: { type: GraphQLString, resolve: l => l.startDate.toISOString() },
+    endDate: { type: GraphQLString, resolve: l => l.endDate.toISOString() },
+    nextRentDate: {
+      type: GraphQLString, resolve: l => l.endDate.toISOString(),
+    },
+    unit: { type: Unit, resolve: lease => lease.getUnit() },
+    tenants: {
+      type: TenantConnection,
+      args: connectionArgs,
+      description: 'Tenants listed on the lease',
+      resolve: (l, args) => connectionFromPromisedArray(
+        l.getTenants({ order: [['lastName', 'ASC'], ['firstName', 'ASC']] }),
+        args
+      ),
+    },
+  }),
+  interfaces: [nodeInterface],
+})
+
+const Tenant = new GraphQLObjectType({
+  name: 'Tenant',
+  description: 'Person renting Unit',
+  fields: () => ({
+    id: globalIdField('Tenant'),
+    firstName: { type: GraphQLString, resolve: t => t.firstName },
+    middleName: { type: GraphQLString, resolve: t => t.middleName },
+    lastName: { type: GraphQLString, resolve: t => t.lastName },
+    fullName: { type: GraphQLString, resolve: t => t.fullName },
+    leases: {
+      type: LeaseConnection,
+      args: connectionArgs,
+      description: 'Leases that this tenant has been a part of',
+      resolve: (tenant, args) => connectionFromPromisedArray(
+        tenant.getLeases({ order: [['startDate', 'DESC']] }),
+        args
+      ),
     },
   }),
   interfaces: [nodeInterface],
@@ -165,6 +222,12 @@ const { connectionType: PropertyConnection } = connectionDefinitions(
 )
 const { connectionType: UnitConnection } = connectionDefinitions(
   { name: 'Unit', nodeType: Unit }
+)
+const { connectionType: LeaseConnection } = connectionDefinitions(
+  { name: 'Lease', nodeType: Lease }
+)
+const { connectionType: TenantConnection } = connectionDefinitions(
+  { name: 'Tenant', nodeType: Tenant }
 )
 
 /**
@@ -228,6 +291,26 @@ const queryType = new GraphQLObjectType({
           db.models.unit.findAll({
             order: [['number', 'ASC']],
           }),
+          args
+        )
+      },
+    },
+    tenants: {
+      type: TenantConnection,
+      args: {
+        ...connectionArgs,
+        firstName: { type: GraphQLString },
+        middleName: { type: GraphQLString },
+        lastName: { type: GraphQLString },
+      },
+      resolve: (_, args) => {
+        const { firstName, middleName, lastName } = args
+        const where = {}
+        if (firstName) where.firstName = firstName
+        if (middleName) where.middleName = middleName
+        if (lastName) where.lastName = lastName
+        return connectionFromPromisedArray(
+          db.models.tenant.findAll({ where }),
           args
         )
       },

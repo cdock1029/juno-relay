@@ -20,18 +20,12 @@ const PropertyQueries = {
 }
 const BuildingQueries = {
   property: () => Relay.QL`
-    query BuildingQueries {
-      node(id: $propertyId)
-    }
+    query BuildingQueries { node(id: $propertyId) }
   `,
 }
 const UnitQueries = {
-  building: (Component) => Relay.QL`
-    query UnitQueries {
-      node(id: $buildingId) {
-        ${Component.getFragment('building')}
-      }
-    }
+  building: () => Relay.QL`
+    query UnitQueries { node(id: $buildingId) }
   `,
 }
 const routes = [

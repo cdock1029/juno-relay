@@ -14,25 +14,21 @@ const UnitListContainer = React.createClass({
     return (
       <EntityList
         title={'Unit'}
-        size='eight wide mobile four wide tablet three wide computer'>
-        {edges.map(e => {
-            /* const unit = unitEntities[id]
-            // last item in unit.leases array...
-            const lease = unit.leases && leaseEntities[unit.leases.slice(-1).pop()]
-            // tenant
-            const tenants = lease && lease.tenants.map(tId => tenantEntities[tId]) */
+        style={{ fontSize: '12px' }}
+        size='eight wide mobile four wide tablet five wide computer'>
+        {edges.map(edge => {
+          const unit = edge.unit
+          const lease = unit.leases.edges[0].lease
+          const tenants = lease.tenants.edges.map(e => e.tenant.fullName).join(', ')
           return (
             <EntityListItem
-              key={e.unit.id}
+              key={unit.id}
               active={false}
               path={
-                `/${'fill_me_in'}/buildings/${'me_too'}/units/${e.unit.id}`
+                `/${'fill_me_in'}/buildings/${'me_too'}/units/${unit.id}`
               }
               text={
-                `${e.unit.number}\u00a0\u00a0\u00a0\u00a0`
-                /* ${tenants ?
-                  tenants.map(t => `${t.firstName} ${t.lastName}`) :
-                  ''}`*/
+                `${unit.number}\u00a0\u00a0\u00a0\u00a0${tenants}`
               } />
             )
         })}
@@ -51,6 +47,20 @@ export default Relay.createContainer(UnitListContainer, {
             unit:node {
               id
               number
+              leases(first:1) {
+                edges {
+                  lease:node {
+                    tenants(first:2) {
+                      edges {
+                        tenant:node {
+                          id
+                          fullName
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
