@@ -1,19 +1,19 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import Relay from 'react-relay'
 import { EntityList, EntityListItem } from './index'
 
 const PropertyListContainer = React.createClass({
 
   propTypes: {
-    company: React.PropTypes.object.isRequired,
-    relay: React.PropTypes.object.isRequired,
+    company: PropTypes.object.isRequired,
+    propertyId: PropTypes.string,
   },
 
   render() {
     console.log('PropertyListContainer - props', this.props)
     const {
       company: { properties: { edges } },
-      relay: { route: { params: { propertyId } } },
+      propertyId,
     } = this.props
     return (
       <EntityList

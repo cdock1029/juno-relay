@@ -6,11 +6,19 @@ const UnitListContainer = React.createClass({
 
   propTypes: {
     building: PropTypes.object.isRequired,
+    propertyId: PropTypes.string.isRequired,
+    buildingId: PropTypes.string.isRequired,
+    unitId: PropTypes.string,
   },
 
   render() {
     console.log('UnitListContainer - props', this.props)
-    const { building: { units: { edges } } } = this.props
+    const {
+      building: { units: { edges } },
+      propertyId,
+      buildingId,
+      unitId,
+    } = this.props
     return (
       <EntityList
         title={'Unit'}
@@ -23,9 +31,9 @@ const UnitListContainer = React.createClass({
           return (
             <EntityListItem
               key={unit.id}
-              active={false}
+              active={unit.id === unitId}
               path={
-                `/${'fill_me_in'}/buildings/${'me_too'}/units/${unit.id}`
+                `/${propertyId}/buildings/${buildingId}/units/${unit.id}`
               }
               text={
                 `${unit.number}\u00a0\u00a0\u00a0\u00a0${tenants}`

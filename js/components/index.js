@@ -1,4 +1,3 @@
-import App from './App'
 import EntityList from './EntityList'
 import EntityListItem from './EntityListItem'
 import BuildingListContainer from './BuildingListContainer'
@@ -7,9 +6,9 @@ import UnitListContainer from './UnitListContainer'
 import NotFound from './NotFound'
 import Root from './NotFound'
 import Heading from './Heading'
+import UnitDetailContainer from './UnitDetailContainer'
 
 export {
-  App,
   BuildingListContainer,
   PropertyListContainer,
   UnitListContainer,
@@ -18,4 +17,5 @@ export {
   NotFound,
   Root,
   Heading,
+  UnitDetailContainer,
 }

@@ -6,8 +6,8 @@ const BuildingListContainer = React.createClass({
 
   propTypes: {
     property: PropTypes.object.isRequired,
-    params: PropTypes.object.isRequired,
-    relay: PropTypes.object.isRequired,
+    propertyId: PropTypes.string.isRequired,
+    buildingId: PropTypes.string,
   },
 
   render() {
@@ -18,8 +18,8 @@ const BuildingListContainer = React.createClass({
           edges,
         },
       },
-      params: { propertyId },
-      relay: { route: { params: { buildingId } } },
+      propertyId,
+      buildingId,
     } = this.props
     // TODO: should we short cricuit & not render when buildingListId
     // not defined ? (leaf nodes rendered before data fetched)

@@ -79,6 +79,23 @@ const Tenant = conn.define('tenant', {
   },
 })
 
+const TransactionType = conn.define('transaction_type', {
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'TransactionType' },
+  name: {
+    type: Seq.STRING,
+    primaryKey: true,
+    set: val => {
+      this.setDataValue('name', val.toUpperCase())
+    },
+  },
+  defaultAmount: { type: Seq.INTEGER, allowNull: true },
+})
+
+const Transaction = conn.define('transaction', {
+  type: { type: Seq.STRING, allowNull: false, defaultValue: 'Transaction' },
+  amount: { type: Seq.INTEGER, allowNull: false, index: true },
+})
+
 Company.hasMany(Property)
 Property.belongsTo(Company)
 Property.hasMany(Building)
@@ -92,56 +109,64 @@ Lease.belongsTo(Unit)
 Lease.belongsToMany(Tenant, { through: 'LeaseTenants' })
 Tenant.belongsToMany(Lease, { through: 'LeaseTenants' })
 
-/* conn.sync({ force: true }).then(() => {
-  Company.create({
-    type: 'Company',
-    name: 'Vandelay Industries',
-  }).then(company => {
-    times(6,
-      () => company.createProperty({
-        name: faker.company.companyName(),
-        city: faker.address.city(),
-        state: faker.address.state(),
-        street: faker.address.streetName(),
-        zip: faker.address.zipCode(),
-      }).then(property => {
-        times(4,
-          () => property.createBuilding({
-            address: faker.random.number({ min: 2000, max: 3500 }).toString(),
-          }).then(building => {
-            times(15,
-              () => building.createUnit({
-                number: faker.random.number({ min: 100, max: 200 }),
-              }).then(unit => {
-                times(3, () => {
-                  const rand = getRandomIntInclusive(3, 24)
-                  const m = moment().subtract(rand, 'months')
-                  unit.createLease({
-                    rent: faker.random.number({ min: 500, max: 750, precision: 50 }),
-                    startDate: m.toDate(),
-                    endDate: m.add(1, 'year').toDate(),
-                  }).then(lease => {
-                    const tenantCount = getRandomIntInclusive(1, 2)
-                    times(tenantCount, () => {
-                      const fn = faker.name.firstName()
-                      const ln = faker.name.lastName()
-                      lease.createTenant({
-                        firstName: fn,
-                        middleName: faker.name.firstName(),
-                        lastName: ln,
-                        phone: faker.phone.phoneNumber('###-###-####'),
-                        email: faker.internet.email(fn, ln, 'gmail.com'),
+Lease.hasMany(Transaction)
+Transaction.belongsTo(Lease)
+Transaction.belongsTo(TransactionType)
+
+const generate = false
+if (generate) {
+  conn.sync({ force: true }).then(() => {
+    Company.create({
+      type: 'Company',
+      name: 'Vandelay Industries',
+    }).then(company => {
+      times(6,
+        () => company.createProperty({
+          name: faker.company.companyName(),
+          city: faker.address.city(),
+          state: faker.address.state(),
+          street: faker.address.streetName(),
+          zip: faker.address.zipCode(),
+        }).then(property => {
+          times(4,
+            () => property.createBuilding({
+              address: faker.random.number({ min: 2000, max: 3500 }).toString(),
+            }).then(building => {
+              times(15,
+                () => building.createUnit({
+                  number: faker.random.number({ min: 100, max: 200 }),
+                }).then(unit => {
+                  times(3, () => {
+                    const rand = getRandomIntInclusive(3, 24)
+                    const m1 = moment().subtract(rand, 'months')
+                    const m2 = m1.clone().add(1, 'years')
+                    unit.createLease({
+                      rent: faker.random.number({ min: 50000, max: 75000, precision: 5000 }),
+                      startDate: m1.toDate(),
+                      endDate: m2.toDate(),
+                    }).then(lease => {
+                      const tenantCount = getRandomIntInclusive(1, 2)
+                      times(tenantCount, () => {
+                        const fn = faker.name.firstName()
+                        const ln = faker.name.lastName()
+                        lease.createTenant({
+                          firstName: fn,
+                          middleName: faker.name.firstName(),
+                          lastName: ln,
+                          phone: faker.phone.phoneNumber('###-###-####'),
+                          email: faker.internet.email(fn, ln, 'gmail.com'),
+                        })
                       })
                     })
                   })
                 })
-              })
-            )
-          })
-        )
-      })
-    )
+              )
+            })
+          )
+        })
+      )
+    })
   })
-}) */
+}
 
 export default conn
