@@ -1,9 +1,11 @@
 const express = require('express')
+const compression = require('compression')
 const graphQLHTTP = require('express-graphql')
 const path = require('path')
 const Schema = require('./data/schema').Schema
 const proxyMiddleware = require('proxy-middleware')
 const url = require('url')
+const ms = require('ms')
 
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
@@ -27,6 +29,7 @@ graphQLServer.listen(GRAPHQL_PORT, () => {
 })
 
 const app = express()
+app.use(compression({ level: 1 }))
 app.use(require('morgan')('short'))
 app.use('/graphql', proxyMiddleware(url.parse(`http://0.0.0.0:${GRAPHQL_PORT}`)))
 
@@ -41,7 +44,7 @@ app.use(webpackHotMiddleware(compiler))
 
 // custom routes...
 // Serve static resources
-app.use('/assets', express.static('public'))
+app.use('/assets', express.static('public', { maxAge: ms('365 days') }))
 app.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'index.html'))
 })

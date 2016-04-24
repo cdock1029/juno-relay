@@ -93,7 +93,13 @@ const TransactionType = conn.define('transaction_type', {
 
 const Transaction = conn.define('transaction', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Transaction' },
-  amount: { type: Seq.INTEGER, allowNull: false, index: true },
+  amount: { type: Seq.INTEGER, allowNull: false },
+}, {
+  indexes: [
+    {
+      fields: ['leaseId', 'createdAt'],
+    },
+  ],
 })
 
 Company.hasMany(Property)
