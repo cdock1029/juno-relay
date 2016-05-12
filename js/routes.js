@@ -33,7 +33,7 @@ const UnitQueries = {
 const UnitDetailQueries = {
   unit: () => Relay.QL`
     query UnitDetailQueries { node(id: $unitId) }
-  `
+  `,
 }
 const routes = [
   (<Route
@@ -54,7 +54,8 @@ const routes = [
         propertyComponent: PropertyQueries,
         buildingComponent: BuildingQueries,
       }} />
-    <Route path='/:propertyId/buildings/:buildingId/units'
+    <Route
+      path='/:propertyId/buildings/:buildingId/units'
       components={{
         propertyComponent: PropertyListContainer,
         buildingComponent: BuildingListContainer,
@@ -64,7 +65,8 @@ const routes = [
         propertyComponent: PropertyQueries,
         buildingComponent: BuildingQueries,
         unitComponent: UnitQueries }} />
-    <Route path='/:propertyId/buildings/:buildingId/units/:unitId'
+    <Route
+      path='/:propertyId/buildings/:buildingId/units/:unitId'
       components={{
         propertyComponent: PropertyListContainer,
         buildingComponent: BuildingListContainer,
