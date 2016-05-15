@@ -1,5 +1,1 @@
-import AppContainer from './AppContainer'
-
-export {
-  AppContainer,
-}
+export Dashboard from './Dashboard'

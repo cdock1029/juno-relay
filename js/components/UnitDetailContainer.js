@@ -17,7 +17,7 @@ const UnitDetailContainer = React.createClass({
     const tenantEdges = lease.tenants.edges
     const dateFormat = 'MMM Do YYYY'
     return (
-      <div className='ten wide column'>
+      <div className='sixteen wide mobile ten wide computer column'>
         <div className='ui raised segment'>
           <div className='ui teal ribbon label'>
             {`${unit.building.address}-${unit.number}`}

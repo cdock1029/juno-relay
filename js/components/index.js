@@ -1,21 +1,10 @@
-import EntityList from './EntityList'
-import EntityListItem from './EntityListItem'
-import BuildingListContainer from './BuildingListContainer'
-import PropertyListContainer from './PropertyListContainer'
-import UnitListContainer from './UnitListContainer'
-import NotFound from './NotFound'
-import Root from './NotFound'
-import Heading from './Heading'
-import UnitDetailContainer from './UnitDetailContainer'
-
-export {
-  BuildingListContainer,
-  PropertyListContainer,
-  UnitListContainer,
-  EntityList,
-  EntityListItem,
-  NotFound,
-  Root,
-  Heading,
-  UnitDetailContainer,
-}
+export EntityList from './EntityList'
+export EntityListItem from './EntityListItem'
+export BuildingListContainer from './BuildingListContainer'
+export PropertyListContainer from './PropertyListContainer'
+export UnitListContainer from './UnitListContainer'
+export NotFound from './NotFound'
+export Root from './NotFound'
+export Heading from './Heading'
+export UnitDetailContainer from './UnitDetailContainer'
+export CreatePropertyComponent from './CreatePropertyComponent'

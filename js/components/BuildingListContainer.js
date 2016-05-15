@@ -26,7 +26,7 @@ const BuildingListContainer = React.createClass({
     return (
       <EntityList
         title={'Building'}
-        size='eight wide mobile four wide tablet two wide computer'>
+        size='three wide'>
         {edges.map(({ building }) => (
             <EntityListItem
               key={building.id}

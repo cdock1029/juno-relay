@@ -4,7 +4,7 @@ import faker from 'faker'
 import moment from 'moment'
 
 function getRandomIntInclusive(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 const conn = new Seq(
@@ -14,12 +14,12 @@ const conn = new Seq(
   { dialect: 'postgres', host: 'localhost' }
 )
 
-const Company = conn.define('company', {
+export const Company = conn.define('company', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Company' },
   name: { type: Seq.STRING, allowNull: false },
 })
 
-const Property = conn.define('property', {
+export const PropertyModel = conn.define('property', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Property' },
   name: { type: Seq.STRING, allowNull: false },
   city: { type: Seq.STRING, allowNull: false },
@@ -28,19 +28,19 @@ const Property = conn.define('property', {
   zip: { type: Seq.STRING, allowNull: false },
 })
 
-const Building = conn.define('building', {
+export const Building = conn.define('building', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Building' },
   address: { type: Seq.STRING, allowNull: false },
 })
 
-const Unit = conn.define('unit', {
+export const Unit = conn.define('unit', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Unit' },
   number: { type: Seq.INTEGER, allowNull: false },
 })
 
 // TODO can default dates be calculated?
 // end leases, create new when renewing? or extend them?
-const Lease = conn.define('lease', {
+export const Lease = conn.define('lease', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Lease' },
   rent: { type: Seq.INTEGER, allowNull: false },
   startDate: { type: Seq.DATE, allowNull: false, defaultValue: Seq.NOW },
@@ -48,7 +48,7 @@ const Lease = conn.define('lease', {
   nextRentDate: { type: Seq.DATE, allowNull: false, defaultValue: Seq.NOW },
 })
 
-const Tenant = conn.define('tenant', {
+export const Tenant = conn.define('tenant', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Tenant' },
   firstName: {
     type: Seq.STRING, allowNull: false, unique: 'tenantNameComposite',
@@ -79,7 +79,7 @@ const Tenant = conn.define('tenant', {
   },
 })
 
-const TransactionType = conn.define('transaction_type', {
+export const TransactionType = conn.define('transaction_type', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'TransactionType' },
   name: {
     type: Seq.STRING,
@@ -91,7 +91,7 @@ const TransactionType = conn.define('transaction_type', {
   defaultAmount: { type: Seq.INTEGER, allowNull: true },
 })
 
-const Transaction = conn.define('transaction', {
+export const Transaction = conn.define('transaction', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Transaction' },
   amount: { type: Seq.INTEGER, allowNull: false },
 }, {
@@ -102,10 +102,10 @@ const Transaction = conn.define('transaction', {
   ],
 })
 
-Company.hasMany(Property)
-Property.belongsTo(Company)
-Property.hasMany(Building)
-Building.belongsTo(Property)
+Company.hasMany(PropertyModel)
+PropertyModel.belongsTo(Company)
+PropertyModel.hasMany(Building)
+Building.belongsTo(PropertyModel)
 Building.hasMany(Unit)
 Unit.belongsTo(Building)
 

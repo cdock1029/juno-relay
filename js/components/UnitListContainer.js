@@ -23,7 +23,7 @@ const UnitListContainer = React.createClass({
       <EntityList
         title={'Unit'}
         style={{ fontSize: '12px' }}
-        size='eight wide mobile four wide tablet five wide computer'>
+        size='twelve wide mobile seven wide tablet seven wide computer'>
         {edges.map(edge => {
           const unit = edge.unit
           const lease = unit.leases.edges[0].lease

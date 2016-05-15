@@ -8,7 +8,6 @@ import {
 } from 'react-router'
 import useRelay from 'react-router-relay'
 
-import Heading from './components/Heading'
 import Relay from 'react-relay'
 
 import {
@@ -17,10 +16,11 @@ import {
   UnitListContainer,
   UnitDetailContainer,
   NotFound,
+  CreatePropertyComponent,
 } from './components'
 
 import {
-  AppContainer,
+  Dashboard,
 } from './containers'
 
 const PropertyQueries = {
@@ -45,59 +45,56 @@ const UnitDetailQueries = {
 }
 
 const Root = () => (
-  <div className='ui container'>
-    <Heading />
-    <Router
-      history={browserHistory}
-      render={applyRouterMiddleware(useRelay)}
-      environment={Relay.Store}>
+  <Router
+    history={browserHistory}
+    render={applyRouterMiddleware(useRelay)}
+    environment={Relay.Store}>
+    <Route
+      queries={PropertyQueries}
+      component={Dashboard}>
       <Route
-        key='route1'
-        queries={PropertyQueries}
-        component={AppContainer}>
-        <Route
-          path='/'
-          components={{ propertyComponent: PropertyListContainer }}
-          queries={{ propertyComponent: PropertyQueries }} />
-        <Route
-          path='/:propertyId/buildings'
-          components={{
-            propertyComponent: PropertyListContainer,
-            buildingComponent: BuildingListContainer,
-          }}
-          queries={{
-            propertyComponent: PropertyQueries,
-            buildingComponent: BuildingQueries,
-          }} />
-        <Route
-          path='/:propertyId/buildings/:buildingId/units'
-          components={{
-            propertyComponent: PropertyListContainer,
-            buildingComponent: BuildingListContainer,
-            unitComponent: UnitListContainer,
-          }}
-          queries={{
-            propertyComponent: PropertyQueries,
-            buildingComponent: BuildingQueries,
-            unitComponent: UnitQueries }} />
-        <Route
-          path='/:propertyId/buildings/:buildingId/units/:unitId'
-          components={{
-            propertyComponent: PropertyListContainer,
-            buildingComponent: BuildingListContainer,
-            unitComponent: UnitListContainer,
-            unitDetailComponent: UnitDetailContainer,
-          }}
-          queries={{
-            propertyComponent: PropertyQueries,
-            buildingComponent: BuildingQueries,
-            unitComponent: UnitQueries,
-            unitDetailComponent: UnitDetailQueries,
-          }} />
-      </Route>
-      <Route key='route2' path='*' component={NotFound} />
-    </Router>
-  </div>
+        path='/'
+        components={{ propertyComponent: PropertyListContainer }}
+        queries={{ propertyComponent: PropertyQueries }} />
+      <Route
+        path='/:propertyId/buildings'
+        components={{
+          propertyComponent: PropertyListContainer,
+          buildingComponent: BuildingListContainer,
+        }}
+        queries={{
+          propertyComponent: PropertyQueries,
+          buildingComponent: BuildingQueries,
+        }} />
+      <Route
+        path='/:propertyId/buildings/:buildingId/units'
+        components={{
+          propertyComponent: PropertyListContainer,
+          buildingComponent: BuildingListContainer,
+          unitComponent: UnitListContainer,
+        }}
+        queries={{
+          propertyComponent: PropertyQueries,
+          buildingComponent: BuildingQueries,
+          unitComponent: UnitQueries }} />
+      <Route
+        path='/:propertyId/buildings/:buildingId/units/:unitId'
+        components={{
+          propertyComponent: PropertyListContainer,
+          buildingComponent: BuildingListContainer,
+          unitComponent: UnitListContainer,
+          unitDetailComponent: UnitDetailContainer,
+        }}
+        queries={{
+          propertyComponent: PropertyQueries,
+          buildingComponent: BuildingQueries,
+          unitComponent: UnitQueries,
+          unitDetailComponent: UnitDetailQueries,
+        }} />
+    </Route>
+    <Route path='/create-property' component={CreatePropertyComponent} />
+    <Route path='*' component={NotFound} />
+  </Router>
 )
 
 export default Root
