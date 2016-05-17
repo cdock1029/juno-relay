@@ -14,7 +14,7 @@ const conn = new Seq(
   { dialect: 'postgres', host: 'localhost' }
 )
 
-export const Company = conn.define('company', {
+export const CompanyModel = conn.define('company', {
   type: { type: Seq.STRING, allowNull: false, defaultValue: 'Company' },
   name: { type: Seq.STRING, allowNull: false },
 })
@@ -102,8 +102,8 @@ export const Transaction = conn.define('transaction', {
   ],
 })
 
-Company.hasMany(PropertyModel)
-PropertyModel.belongsTo(Company)
+CompanyModel.hasMany(PropertyModel)
+PropertyModel.belongsTo(CompanyModel)
 PropertyModel.hasMany(Building)
 Building.belongsTo(PropertyModel)
 Building.hasMany(Unit)
@@ -122,7 +122,7 @@ Transaction.belongsTo(TransactionType)
 const generate = false
 if (generate) {
   conn.sync({ force: true }).then(() => {
-    Company.create({
+    CompanyModel.create({
       type: 'Company',
       name: 'Vandelay Industries',
     }).then(company => {

@@ -1,4 +1,7 @@
 import React from 'react'
+import { createStore, combineReducers } from 'redux'
+import { reducer as formReducer } from 'redux-form'
+import { Provider } from 'react-redux'
 
 import {
   Router,
@@ -20,10 +23,11 @@ import {
 } from './components'
 
 import {
+  Container,
   Dashboard,
 } from './containers'
 
-const PropertyQueries = {
+const CompanyQuery = {
   company: () => Relay.QL`
     query PropertiesQueries { company }
   `,
@@ -44,57 +48,70 @@ const UnitDetailQueries = {
   `,
 }
 
+const reducers = {
+  form: formReducer,
+}
+const reducer = combineReducers(reducers)
+const store = createStore(reducer)
+
 const Root = () => (
-  <Router
-    history={browserHistory}
-    render={applyRouterMiddleware(useRelay)}
-    environment={Relay.Store}>
-    <Route
-      queries={PropertyQueries}
-      component={Dashboard}>
-      <Route
-        path='/'
-        components={{ propertyComponent: PropertyListContainer }}
-        queries={{ propertyComponent: PropertyQueries }} />
-      <Route
-        path='/:propertyId/buildings'
-        components={{
-          propertyComponent: PropertyListContainer,
-          buildingComponent: BuildingListContainer,
-        }}
-        queries={{
-          propertyComponent: PropertyQueries,
-          buildingComponent: BuildingQueries,
-        }} />
-      <Route
-        path='/:propertyId/buildings/:buildingId/units'
-        components={{
-          propertyComponent: PropertyListContainer,
-          buildingComponent: BuildingListContainer,
-          unitComponent: UnitListContainer,
-        }}
-        queries={{
-          propertyComponent: PropertyQueries,
-          buildingComponent: BuildingQueries,
-          unitComponent: UnitQueries }} />
-      <Route
-        path='/:propertyId/buildings/:buildingId/units/:unitId'
-        components={{
-          propertyComponent: PropertyListContainer,
-          buildingComponent: BuildingListContainer,
-          unitComponent: UnitListContainer,
-          unitDetailComponent: UnitDetailContainer,
-        }}
-        queries={{
-          propertyComponent: PropertyQueries,
-          buildingComponent: BuildingQueries,
-          unitComponent: UnitQueries,
-          unitDetailComponent: UnitDetailQueries,
-        }} />
-    </Route>
-    <Route path='/create-property' component={CreatePropertyComponent} />
-    <Route path='*' component={NotFound} />
-  </Router>
+  <Provider store={store}>
+    <Router
+      history={browserHistory}
+      render={applyRouterMiddleware(useRelay)}
+      environment={Relay.Store}>
+      <Route component={Container}>
+        <Route
+          queries={CompanyQuery}
+          component={Dashboard}>
+          <Route
+            path='/'
+            components={{ propertyComponent: PropertyListContainer }}
+            queries={{ propertyComponent: CompanyQuery }} />
+          <Route
+            path='/:propertyId/buildings'
+            components={{
+              propertyComponent: PropertyListContainer,
+              buildingComponent: BuildingListContainer,
+            }}
+            queries={{
+              propertyComponent: CompanyQuery,
+              buildingComponent: BuildingQueries,
+            }} />
+          <Route
+            path='/:propertyId/buildings/:buildingId/units'
+            components={{
+              propertyComponent: PropertyListContainer,
+              buildingComponent: BuildingListContainer,
+              unitComponent: UnitListContainer,
+            }}
+            queries={{
+              propertyComponent: CompanyQuery,
+              buildingComponent: BuildingQueries,
+              unitComponent: UnitQueries }} />
+          <Route
+            path='/:propertyId/buildings/:buildingId/units/:unitId'
+            components={{
+              propertyComponent: PropertyListContainer,
+              buildingComponent: BuildingListContainer,
+              unitComponent: UnitListContainer,
+              unitDetailComponent: UnitDetailContainer,
+            }}
+            queries={{
+              propertyComponent: CompanyQuery,
+              buildingComponent: BuildingQueries,
+              unitComponent: UnitQueries,
+              unitDetailComponent: UnitDetailQueries,
+            }} />
+        </Route>
+        <Route
+          path='/create-property'
+          component={CreatePropertyComponent}
+          queries={CompanyQuery} />
+      </Route>
+      <Route path='*' component={NotFound} />
+    </Router>
+  </Provider>
 )
 
 export default Root

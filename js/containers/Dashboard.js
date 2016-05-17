@@ -3,7 +3,6 @@ import Relay from 'react-relay'
 
 import {
   PropertyListContainer,
-  Heading,
 } from '../components'
 
 const Dashboard = (props) => {
@@ -16,24 +15,21 @@ const Dashboard = (props) => {
   } = props
   // console.log('render Dashboard - props:', props)
   return (
-    <div className='ui container'>
-      <Heading />
-      <div className='ui two column grid'>
-        <div className='row'>
-          <div className='sixteen wide mobile ten wide computer column'>
-            <h5 className='ui inverted teal top attached header'>{company.name}</h5>
-            <div className='ui attached segment row'>
-              <div className='ui equal width grid'>
-              {propertyComponent}
-              {buildingComponent || <noscript />}
-              {unitComponent || <noscript />}
-              </div>
+    <div className='ui two column grid'>
+      <div className='row'>
+        <div className='sixteen wide mobile ten wide computer column'>
+          <h5 className='ui inverted teal top attached header'>{company.name}</h5>
+          <div className='ui attached segment row'>
+            <div className='ui equal width grid'>
+            {propertyComponent}
+            {buildingComponent || <noscript />}
+            {unitComponent || <noscript />}
             </div>
           </div>
         </div>
-        <div className='row'>
-          {unitDetailComponent || <noscript />}
-        </div>
+      </div>
+      <div className='row'>
+        {unitDetailComponent || <noscript />}
       </div>
     </div>
   )

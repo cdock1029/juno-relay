@@ -1,35 +1,48 @@
 import {
   GraphQLNonNull,
   GraphQLString,
-  GraphQLInt,
+  GraphQLID,
   GraphQLObjectType,
 } from 'graphql'
 
-import { mutationWithClientMutationId } from 'graphql-relay'
-import { PropertyModel } from '../db'
-import { Property } from '../types'
+import {
+  mutationWithClientMutationId,
+  fromGlobalId,
+} from 'graphql-relay'
+import { PropertyModel, CompanyModel } from '../db'
+import { Property, Company } from '../types'
 
 const CreatePropertyMutation = mutationWithClientMutationId({
-  name: 'CreateProperty',
+  name: 'CreatePropertyMutation',
   inputFields: {
     name: { type: new GraphQLNonNull(GraphQLString) },
     city: { type: new GraphQLNonNull(GraphQLString) },
     street: { type: new GraphQLNonNull(GraphQLString) },
     state: { type: new GraphQLNonNull(GraphQLString) },
     zip: { type: new GraphQLNonNull(GraphQLString) },
-    companyId: { type: new GraphQLNonNull(GraphQLInt) },
+    companyId: { type: new GraphQLNonNull(GraphQLID) },
   },
   outputFields: {
+    company: {
+      type: Company,
+      resolve: payload => payload.company.get({ plain: true }),
+    },
     property: {
       type: Property,
-      resolve: prop => prop.get({ plain: true }),
+      resolve: payload => payload.property.get({ plain: true }),
     },
   },
   // TODO: fix this, error handling, use correct Model methods, etc.
-  mutateAndGetPayload: async (input) => await PropertyModel.create(
-    input,
-    { fields: ['name', 'city', 'street', 'state', 'zip', 'companyId'] }
-  ),
+  mutateAndGetPayload: async (input) => {
+    const { id: companyId } = fromGlobalId(input.companyId)
+    // TODO: make this a transaction ???
+    const company = await CompanyModel.findById(companyId)
+    const property = await PropertyModel.create(
+      { ...input, companyId },
+      { fields: ['name', 'city', 'street', 'state', 'zip', 'companyId'] }
+    )
+    return { company, property }
+  },
 })
 
 /**
@@ -39,6 +52,6 @@ const CreatePropertyMutation = mutationWithClientMutationId({
 export const RootMutation = new GraphQLObjectType({
   name: 'RootMutation',
   fields: () => ({
-    createProperty: CreatePropertyMutation,
+    createPropertyMutation: CreatePropertyMutation,
   }),
 })

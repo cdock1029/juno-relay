@@ -1,0 +1,1 @@
+export CreatePropertyMutation from './CreatePropertyMutation'

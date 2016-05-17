@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql'
-import { RootQuery } from './types'
+import { RootQuery } from './queries'
 import { RootMutation } from './mutations'
 
 // const debug = require('debug')('cdock:schema')
