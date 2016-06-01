@@ -25,22 +25,23 @@ const CreatePropertyMutation = mutationWithClientMutationId({
   outputFields: {
     company: {
       type: Company,
-      resolve: payload => payload.company.get({ plain: true }),
+      resolve: payload => payload.company, // .get({ plain: true }),
     },
     property: {
       type: Property,
-      resolve: payload => payload.property.get({ plain: true }),
+      resolve: payload => payload.property, // .get({ plain: true }),
     },
   },
   // TODO: fix this, error handling, use correct Model methods, etc.
   mutateAndGetPayload: async (input) => {
     const { id: companyId } = fromGlobalId(input.companyId)
-    // TODO: make this a transaction ???
-    const company = await CompanyModel.findById(companyId)
-    const property = await PropertyModel.create(
-      { ...input, companyId },
-      { fields: ['name', 'city', 'street', 'state', 'zip', 'companyId'] }
-    )
+    const [company, property] = await Promise.all([
+      CompanyModel.findById(companyId),
+      PropertyModel.create(
+        { ...input, companyId },
+        { fields: ['name', 'city', 'street', 'state', 'zip', 'companyId'] }
+      ),
+    ])
     return { company, property }
   },
 })

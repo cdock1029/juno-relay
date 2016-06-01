@@ -29,14 +29,15 @@ const CreatePropertyForm = ({
       <label>Zip Code</label>
       <Field component='input' type='text' name='zip' placeholder='Zip code' />
     </div>
-    <button className='ui button' type='submit'>Save</button>
+    <button
+      className='ui button'
+      type='submit'
+      disabled={pristine || submitting}>Save</button>
     <button
       className='ui button'
       type='button'
       disabled={pristine || submitting}
-      onClick={reset}>
-      Clear
-    </button>
+      onClick={reset}>Clear</button>
   </form>
 )
 
