@@ -2,15 +2,17 @@ import Seq from 'sequelize'
 import times from 'lodash.times'
 import faker from 'faker'
 import moment from 'moment'
+const config = require('./config.json')
 
 function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+// TODO configure these according to environment
 const conn = new Seq(
   'relay', // db
-  'postgres', // username
-  'falcon14', // pw
+  config.username, // username
+  config.password, // pw
   { dialect: 'postgres', host: 'localhost' }
 )
 

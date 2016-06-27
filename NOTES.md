@@ -4,3 +4,5 @@ Through-table that associates `Tenant` to the `Unit` they are renting. Need to f
 Think about validations where for a given unitId, can't have overlapping Leases when creating.
 (startDate, endDate)
 
+
+- fix database config using environment specific configs
